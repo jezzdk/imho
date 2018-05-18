@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-import { base } from '../base';
+import { database } from '../../firebase';
 
 class Edit extends Component {
   constructor(props) {
@@ -16,14 +16,14 @@ class Edit extends Component {
   }
 
   componentWillMount() {
-    this.postRef = base.bindToState('posts/' + this.props.match.params.id, {
+    this.postRef = database.bindToState('posts/' + this.props.match.params.id, {
       context: this,
       state: 'post'
     });
   }
 
   componentWillUnmount() {
-    base.removeBinding(this.postRef);
+    database.removeBinding(this.postRef);
   }
 
   render() {
@@ -60,7 +60,7 @@ class Edit extends Component {
   handleSubmit(event) {
     let postId = this.props.match.params.id;
 
-    base.update('posts/' + postId, {
+    database.update('posts/' + postId, {
       data: this.state.post
     });
 

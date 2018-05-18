@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { base } from '../base';
+import { connect } from 'react-redux';
 import firebase from 'firebase';
+
+import { addPost } from '../../actions/posts'
 
 class Create extends Component {
   constructor(props) {
@@ -40,12 +42,16 @@ class Create extends Component {
   }
 
   handleSubmit(event) {
-    let ref = base.push('posts', {
-      data: {...this.state, uid: this.props.user.uid, timestamp: firebase.database.ServerValue.TIMESTAMP}
-    });
+    event.preventDefault();
 
-    this.props.history.push(`/posts/${ref.key}`);
+    this.props.dispatch(addPost({
+      ...this.state,
+      uid: this.props.user.uid,
+      created: firebase.database.ServerValue.TIMESTAMP
+    }));
+
+    this.props.history.push(`/`);
   }
 };
 
-export default Create;
+export default connect()(Create);

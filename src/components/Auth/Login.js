@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { app, facebookProvider, googleProvider } from '../base';
+import { firebaseApp, facebookProvider, googleProvider } from '../../firebase';
 
 class Login extends Component {
   constructor(props) {
@@ -50,10 +50,10 @@ class Login extends Component {
     const email = this.email.current.value;
     const password = this.password.current.value;
 
-    app.auth().fetchProvidersForEmail(email).then((providers) => {
+    firebaseApp.auth().fetchProvidersForEmail(email).then((providers) => {
       if (providers.length === 0) {
         // create user
-        return app.auth().createUserWithEmailAndPassword(email, password);
+        return firebaseApp.auth().createUserWithEmailAndPassword(email, password);
       }
       else if (providers.indexOf('password') === -1) {
         // they used facebook
@@ -62,7 +62,7 @@ class Login extends Component {
       }
       else {
         // sign user in
-        return app.auth().signInWithEmailAndPassword(email, password);
+        return firebaseApp.auth().signInWithEmailAndPassword(email, password);
       }
     }).then((user) => {
       if (user) {
@@ -88,7 +88,7 @@ class Login extends Component {
   }
 
   triggerPopup(provider) {
-    app.auth().signInWithPopup(provider).then((user, error) => {
+    firebaseApp.auth().signInWithPopup(provider).then((user, error) => {
       if (error) {
         alert(error.message);
       }

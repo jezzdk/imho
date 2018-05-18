@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route, Link, Redirect } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
-import { app } from '../base';
+import { firebaseApp } from '../firebase';
 import Header from './Header';
-import Home from '../Home/Home';
-import Login from '../Login/Login';
-import Logout from '../Login/Logout';
-import CreatePost from '../Posts/Create';
-import ViewPost from '../Posts/View';
-import EditPost from '../Posts/Edit';
+import Home from './Home';
+import Login from './Auth/Login';
+import Logout from './Auth/Logout';
+import CreatePost from './Posts/Create';
+import SinglePost from '../containers/SinglePost';
+import EditPost from './Posts/Edit';
 
 function AuthenticatedRoute({ component: Component, authenticated, ...rest}) {
   return (
@@ -30,7 +30,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    this.removeAuthListener = app.auth().onAuthStateChanged((user) => {
+    this.removeAuthListener = firebaseApp.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({
           authenticated: true,
@@ -75,7 +75,7 @@ class App extends Component {
             <Route path="/login" exact render={(props) => <Login setCurrentUser={this.setCurrentUser.bind(this)} {...props} />} />
             <Route path="/logout" exact component={Logout} />
             <AuthenticatedRoute path="/posts/create" exact component={CreatePost} authenticated={this.state.authenticated} user={this.state.user} />
-            <Route path="/posts/:id" exact render={(props) => <ViewPost {...props} authenticated={this.state.authenticated} user={this.state.user} />} />
+            <Route path="/posts/:id" exact render={(props) => <SinglePost {...props} authenticated={this.state.authenticated} user={this.state.user} />} />
             <Route path="/posts/:id/edit" exact component={EditPost} />
           </Switch>
         </div>

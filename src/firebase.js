@@ -20,4 +20,4 @@ const googleProvider = new firebase.auth.GoogleAuthProvider();
 const settings = { timestampsInSnapshots: true };
 database.settings(settings);
 
-export { firebaseApp, database, facebookProvider, googleProvider };
+export { firebase, firebaseApp, database, facebookProvider, googleProvider };

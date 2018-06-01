@@ -1,45 +1,54 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import Single from '../components/Posts/Single'
-import { fetchPosts, deletePost, saveComment, deleteComment } from '../actions/posts'
+import Comments from './Comments'
+
+import { fetchPost, deletePost } from '../actions/posts'
 
 class SinglePost extends Component {
   componentDidMount() {
-    this.props.dispatch(fetchPosts());
+    this.props.fetchPost(this.props.match.params.id)
   }
 
   render() {
-    let { isFetching, post, comments, authenticated } = this.props;
+    let { isFetching, post, authenticated } = this.props
 
     if (isFetching) {
       return <p>Loading...</p>
     }
 
-    let saveC = (comment) => {
-      this.props.dispatch(saveComment(comment));
+    if (!isFetching && post === null) {
+      return null
     }
 
-    let deleteComment = (id) => {
-      this.props.dispatch(deleteComment(id));
-    }
+    return (
+      <div>
+        <Single post={post} />
 
-    return <Single post={post} comments={comments} authenticated={authenticated} saveComment={saveC} deleteComment={deleteComment}/>
+        <Link to="/">Back</Link> {authenticated ? (<span><Link to={`/posts/${post.id}/edit`}>Edit</Link> <a href="#delete" onClick={(e) => this.deletePost(e)}>Delete</a></span>) : null}
+
+        <Comments post={post} />
+      </div>
+    )
+  }
+
+  deletePost(e) {
+    e.preventDefault();
+
+    this.props.deletePost(this.props.post.id);
+
+    this.props.history.push('/');
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let post = state.posts.items.find((p) => {
-    return p.id === ownProps.match.params.id;
-  });
-console.log(post, state.posts.items, ownProps.match.params.id);
   return {
+    authenticated: state.auth.loggedIn,
     isFetching: state.posts.fetching,
-    post,
-    comments: []
+    post: state.posts.lastPost,
   }
 }
 
-export default connect(
-  mapStateToProps
-)(SinglePost)
+export default connect(mapStateToProps, { fetchPost, deletePost })(SinglePost)

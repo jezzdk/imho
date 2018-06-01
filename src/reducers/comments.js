@@ -1,31 +1,23 @@
-const posts = (state = {
+const comments = (state = {
   fetching: false,
   items: [],
-  lastPost: null,
   error: null
 }, action) => {
   switch (action.type) {
-    case 'POSTS_LOADING':
+    case 'COMMENTS_LOADING':
       return {
         ...state,
         fetching: true
       }
 
-    case 'RECEIVE_POSTS':
+    case 'RECEIVE_COMMENTS':
       return {
         ...state,
         fetching: false,
-        items: action.posts
+        items: action.comments
       }
 
-    case 'RECEIVE_POST':
-      return {
-        ...state,
-        fetching: false,
-        lastPost: action.post
-      }
-
-    case 'ADD_POST':
+    case 'ADD_COMMENT':
       return {
         ...state,
         items: [
@@ -37,28 +29,25 @@ const posts = (state = {
         ]
       }
 
-    case 'POST_ADDED':
+    case 'COMMENT_ADDED':
       return state
 
-    case 'POST_UPDATED':
-      return state
-
-    case 'POST_DELETED':
-      let posts = [...state.items]
-      let index = posts.findIndex((post) => {
-        return post.id === action.id
+    case 'COMMENT_DELETED':
+      let comments = [...state.items]
+      let index = comments.findIndex((comment) => {
+        return comment.id === action.id
       })
 
       if (index !== -1) {
-        posts.splice(index, 1)
+        comments.splice(index, 1)
       }
 
       return {
         ...state,
-        items: posts
+        items: comments
       }
 
-    case 'POSTS_FAILED':
+    case 'COMMENTS_FAILED':
       return {
         ...state,
         fetching: false,
@@ -70,4 +59,4 @@ const posts = (state = {
   }
 }
 
-export default posts
+export default comments

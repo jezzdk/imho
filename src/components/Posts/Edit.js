@@ -1,71 +1,59 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-
-import { database } from '../../firebase';
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 class Edit extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
-      post: {
-        title: '',
-        text: ''
-      }
-    };
+      title: '',
+      text: ''
+    }
   }
 
-  componentWillMount() {
-    this.postRef = database.bindToState('posts/' + this.props.match.params.id, {
-      context: this,
-      state: 'post'
-    });
-  }
+  componentDidMount() {
+    let { post: { title, text} } = this.props
 
-  componentWillUnmount() {
-    database.removeBinding(this.postRef);
+    this.setState({
+      title,
+      text
+    })
   }
 
   render() {
-    let postId = this.props.match.params.id;
+    let postId = this.props.post.id
 
     return (
-      <div>
-        <form onSubmit={this.handleSubmit.bind(this)}>
-          <div>
-            <label>Title</label><br />
-            <input type="text" name="title" value={this.state.post.title} onChange={this.handleChange.bind(this)} />
-          </div>
-          <div>
-            <label>Text</label><br />
-            <textarea name="text" value={this.state.post.text} onChange={this.handleChange.bind(this)}></textarea>
-          </div>
-          <button type="submit">Save</button>
-        </form>
-
-        <Link to={`/posts/${postId}`}>Back</Link>
-      </div>
-    );
+      <form onSubmit={this.handleSubmit.bind(this)}>
+        <div>
+          <label>Title</label><br />
+          <input type="text" name="title" value={this.state.title} onChange={this.handleChange.bind(this)} />
+        </div>
+        <div>
+          <label>Text</label><br />
+          <textarea name="text" value={this.state.text} onChange={this.handleChange.bind(this)}></textarea>
+        </div>
+        <button type="submit">Save</button>
+      </form>
+    )
   }
 
   handleChange(event) {
     this.setState({
-      post: {
-        ...this.state.post,
-        [event.target.name]: event.target.value
-      }
-    });
+      [event.target.name]: event.target.value
+    })
   }
 
   handleSubmit(event) {
-    let postId = this.props.match.params.id;
+    event.preventDefault()
 
-    database.update('posts/' + postId, {
-      data: this.state.post
-    });
+    let postId = this.props.post.id
 
-    this.props.history.push(`/posts/${postId}`);
+    this.props.updatePost({
+      ...this.state,
+      id: postId
+    })
   }
 }
 
-export default Edit;
+export default Edit

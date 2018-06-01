@@ -1,18 +1,13 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import firebase from 'firebase';
-
-import { addPost } from '../../actions/posts'
+import React, { Component } from 'react'
 
 class Create extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       title: '',
       text: ''
-    };
+    }
   }
 
   render() {
@@ -30,28 +25,23 @@ class Create extends Component {
           </div>
           <button type="submit">Save</button>
         </form>
-        <Link to="/">Go back</Link>
       </div>
-    );
+    )
   }
 
   handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value
-    });
+    })
   }
 
   handleSubmit(event) {
-    event.preventDefault();
+    event.preventDefault()
 
-    this.props.dispatch(addPost({
+    this.props.savePost({
       ...this.state,
-      uid: this.props.user.uid,
-      created: firebase.database.ServerValue.TIMESTAMP
-    }));
-
-    this.props.history.push(`/`);
+    })
   }
-};
+}
 
-export default connect()(Create);
+export default Create

@@ -6,7 +6,7 @@ const List = ({ posts, deletePost }) => (
     {posts.map((post) => {
       return (
         <li key={post.id}>
-          <Link to={`/posts/${post.id}`}>{post.title}</Link> <a href="#delete" onClick={(e) => deletePost(post.id, e)}>Delete</a>
+          <Link to={`/posts/${post.id}`}>{post.title}</Link> <a href="#delete" onClick={(e) => deletePost(post.id)}>Delete</a>
         </li>
       );
     })}

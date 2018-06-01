@@ -1,43 +1,55 @@
-import { firebase, database } from '../firebase';
+import { firebase, database } from '../firebase'
 
 export const fetchPosts = () => {
   return function(dispatch) {
-    dispatch(postsLoading());
+    dispatch(postsLoading())
 
     database.collection('posts').orderBy('createdAt', 'desc').get().then(function(querySnapshot) {
-      let posts = [];
+      let posts = []
 
       querySnapshot.forEach(function(doc) {
         posts.push({
           id: doc.id,
           ...doc.data()
-        });
-      });
+        })
 
-      dispatch(receivePosts(posts));
+        database.collection('users').doc(doc.data().uid).get().then((userDoc) => {
+          dispatch(attachAuthor(doc.id, userDoc.data()))
+        })
+      })
+
+      dispatch(receivePosts(posts))
     }).catch((error) => {
       dispatch(postsFailed(error))
-    });
+    })
+  }
+}
+
+export const attachAuthor = (postId, data) => {
+  return {
+    type: 'ATTACH_AUTHOR',
+    id: postId,
+    author: data
   }
 }
 
 export const fetchPost = (id) => {
   return function(dispatch) {
-    dispatch(postsLoading());
+    dispatch(postsLoading())
 
     database.collection('posts').doc(id).get().then(function(doc) {
       if (doc.exists) {
         dispatch(receivePost({
           id: doc.id,
           ...doc.data()
-        }));
+        }))
       } else {
         // doc.data() will be undefined in this case
-        //console.log("No such document!");
+        //console.log("No such document!")
       }
     }).catch((error) => {
       dispatch(postsFailed(error))
-    });
+    })
   }
 }
 
@@ -49,7 +61,7 @@ export const savePost = (post) => {
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     }).then((doc) => {
       dispatch(postAdded(doc.id))
-    });
+    })
   }
 }
 
@@ -59,7 +71,7 @@ export const updatePost = (id, post) => {
       ...post,
     }, { merge: true }).then(() => {
       dispatch(postUpdated(id))
-    });
+    })
   }
 }
 
@@ -67,7 +79,7 @@ export const deletePost = id => {
   return function(dispatch) {
     database.collection('posts').doc(id).delete().then(() => {
       dispatch(postDeleted(id))
-    });
+    })
   }
 }
 

@@ -53,12 +53,12 @@ export const savePost = (post) => {
   }
 }
 
-export const updatePost = (post) => {
+export const updatePost = (id, post) => {
   return function(dispatch, getState) {
-    database.collection('posts').doc(post.id).set({
+    database.collection('posts').doc(id).set({
       ...post,
     }, { merge: true }).then(() => {
-      dispatch(postUpdated(post.id))
+      dispatch(postUpdated(id))
     });
   }
 }

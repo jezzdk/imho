@@ -10,7 +10,7 @@ class PostList extends Component {
   }
 
   render() {
-    let { isFetching, posts, deletePost, error } = this.props
+    let { isFetching, posts, deletePost, authenticated, user, error } = this.props
 
     if (isFetching) {
       return <p>Fetching...</p>
@@ -24,11 +24,13 @@ class PostList extends Component {
       return <p>{error}</p>
     }
 
-    return <List posts={posts} deletePost={deletePost} />
+    return <List posts={posts} authenticated={authenticated} user={user} deletePost={deletePost} />
   }
 }
 
 const mapStateToProps = state => ({
+  authenticated: state.auth.loggedIn,
+  user: state.auth.user,
   isFetching: state.posts.fetching,
   posts: state.posts.items
 })

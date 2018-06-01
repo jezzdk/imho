@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 
 class Edit extends Component {
   constructor(props) {
@@ -21,8 +20,6 @@ class Edit extends Component {
   }
 
   render() {
-    let postId = this.props.post.id
-
     return (
       <form onSubmit={this.handleSubmit.bind(this)}>
         <div>

@@ -12,7 +12,6 @@ const config = {
 }
 
 const firebaseApp = firebase.initializeApp(config);
-//const database = Rebase.createClass(firebaseApp.database());
 const database = firebaseApp.firestore();
 const facebookProvider = new firebase.auth.FacebookAuthProvider();
 const googleProvider = new firebase.auth.GoogleAuthProvider();

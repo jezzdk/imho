@@ -1,10 +1,10 @@
 import React from 'react';
 
-const Single = props => (
+const Single = ({ comment, authenticated, user, deleteComment }) => (
   <div>
-    <h4>{props.comment.title}</h4>
-    <p>{props.comment.text}</p>
-    <p><a href="#delete" onClick={props.delete}>Delete</a></p>
+    <h4>{comment.title}</h4>
+    <p>{comment.text}</p>
+    {authenticated && comment.uid === user.uid ? (<p><a href="#delete" onClick={deleteComment}>Delete</a></p>) : null}
   </div>
 );
 

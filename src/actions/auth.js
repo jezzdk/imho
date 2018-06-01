@@ -1,4 +1,4 @@
-import { firebaseApp, facebookProvider, googleProvider } from '../firebase'
+import { firebaseApp, database, facebookProvider, googleProvider } from '../firebase'
 
 export const fetchAuthInfo = () => {
   return function(dispatch) {
@@ -8,24 +8,22 @@ export const fetchAuthInfo = () => {
       dispatch(userLoading(false))
 
       if (user) {
+        dispatch(updateUserData(user))
         dispatch(userLoggedIn(user))
-
-        // this.setState({
-        //   authenticated: true,
-        //   user: user,
-        //   loading: false
-        // })
       }
       else {
         dispatch(userLoggedOut())
-
-        // this.setState({
-        //   authenticated: false,
-        //   user: null,
-        //   loading: false
-        // })
       }
     })
+  }
+}
+
+export const updateUserData = user => {
+  return function(dispatch) {
+    database.collection('users').doc(user.uid).set({
+      displayName: user.displayName,
+      photoURL: user.photoURL
+    }, { merge: true })
   }
 }
 
@@ -45,7 +43,9 @@ export const loginWithEmailAndPassword = (email, password) => {
       }
       else {
         // sign user in
-        firebaseApp.auth().signInWithEmailAndPassword(email, password)
+        firebaseApp.auth().signInWithEmailAndPassword(email, password).then((user) => {
+          console.log('LOGIN', user)
+        })
       }
     }).catch((error) => {
       dispatch(authenticating(false))
@@ -58,7 +58,8 @@ export const loginWithFacebook = () => {
   return function(dispatch) {
     dispatch(authenticating(true))
 
-    firebaseApp.auth().signInWithPopup(facebookProvider).then(() => {
+    firebaseApp.auth().signInWithPopup(facebookProvider).then((user) => {
+      console.log('FACEBOOK', user)
       dispatch(authenticating(false))
     }).catch((error) => {
       dispatch(authenticating(false))
@@ -71,7 +72,8 @@ export const loginWithGoogle = () => {
   return function(dispatch) {
     dispatch(authenticating(true))
 
-    firebaseApp.auth().signInWithPopup(googleProvider).then(() => {
+    firebaseApp.auth().signInWithPopup(googleProvider).then((user) => {
+      console.log('GOOGLE', user)
       dispatch(authenticating(false))
     }).catch((error) => {
       dispatch(authenticating(false))
@@ -84,7 +86,13 @@ export const signupWithEmailAndPassword = (name, email, password) => {
   return function(dispatch) {
     dispatch(authenticating(true))
 
-    firebaseApp.auth().createUserWithEmailAndPassword(email, password).then(() => {
+    firebaseApp.auth().createUserWithEmailAndPassword(email, password).then((user) => {
+      user.updateProfile({
+        displayName: name,
+      }).then(() => {
+        dispatch(userLoggedIn(user))
+      })
+
       dispatch(authenticating(false))
     }).catch((error) => {
       dispatch(authenticating(false))

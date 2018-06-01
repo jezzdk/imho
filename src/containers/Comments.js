@@ -12,7 +12,7 @@ class Comments extends Component {
   }
 
   render() {
-    let { authenticated, isFetching, comments, post } = this.props
+    let { authenticated, user, isFetching, comments, post } = this.props
 
     return (
       <div>
@@ -24,7 +24,7 @@ class Comments extends Component {
             {comments.map((comment) => {
               return (
                 <li key={comment.id}>
-                  <Single comment={comment} delete={() => this.props.deleteComment(post.id, comment.id)}></Single>
+                  <Single comment={comment} authenticated={authenticated} user={user} deleteComment={() => this.props.deleteComment(post.id, comment.id)}></Single>
                 </li>
               );
             })}
@@ -38,6 +38,7 @@ class Comments extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     authenticated: state.auth.loggedIn,
+    user: state.auth.user,
     isFetching: state.comments.fetching,
     comments: state.comments.items
   }

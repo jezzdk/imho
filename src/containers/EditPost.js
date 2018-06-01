@@ -12,7 +12,7 @@ class EditPost extends Component {
   }
 
   render() {
-    let { isFetching, post, authenticated } = this.props
+    let { isFetching, post } = this.props
 
     if (isFetching) {
       return <p>Loading...</p>
@@ -33,9 +33,9 @@ class EditPost extends Component {
   }
 
   updatePost(data) {
-    this.props.updatePost(data)
-
     let postId = this.props.post.id
+
+    this.props.updatePost(postId, data)
 
     this.props.history.push(`/posts/${postId}`)
   }
@@ -43,7 +43,6 @@ class EditPost extends Component {
 
 const mapStateToProps = state => {
   return {
-    authenticated: state.auth.loggedIn,
     isFetching: state.posts.fetching,
     post: state.posts.lastPost,
   }

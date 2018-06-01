@@ -13,7 +13,7 @@ class SinglePost extends Component {
   }
 
   render() {
-    let { isFetching, post, authenticated } = this.props
+    let { isFetching, post, authenticated, user } = this.props
 
     if (isFetching) {
       return <p>Loading...</p>
@@ -27,7 +27,7 @@ class SinglePost extends Component {
       <div>
         <Single post={post} />
 
-        <Link to="/">Back</Link> {authenticated ? (<span><Link to={`/posts/${post.id}/edit`}>Edit</Link> <a href="#delete" onClick={(e) => this.deletePost(e)}>Delete</a></span>) : null}
+        <Link to="/">Back</Link> {authenticated && post.uid === user.uid ? (<span><Link to={`/posts/${post.id}/edit`}>Edit</Link> <a href="#delete" onClick={(e) => this.deletePost(e)}>Delete</a></span>) : null}
 
         <Comments post={post} />
       </div>
@@ -46,6 +46,7 @@ class SinglePost extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     authenticated: state.auth.loggedIn,
+    user: state.auth.user,
     isFetching: state.posts.fetching,
     post: state.posts.lastPost,
   }

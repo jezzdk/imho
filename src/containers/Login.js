@@ -5,66 +5,66 @@ import { connect } from 'react-redux'
 import { loginWithEmailAndPassword, loginWithFacebook, loginWithGoogle } from '../actions/auth'
 
 class Login extends Component {
-  constructor(props) {
-    super(props)
+    constructor(props) {
+        super(props)
 
-    this.email = React.createRef()
-    this.password = React.createRef()
-  }
-
-  render() {
-    if (this.props.authenticated) {
-      const { from } = this.props.location.state || { from: { pathname: '/' } }
-
-      return <Redirect to={from} />
+        this.email = React.createRef()
+        this.password = React.createRef()
     }
 
-    return (
-      <div>
-        <button onClick={() => this.props.loginWithFacebook()}>Log in with Facebook</button>
-        <button onClick={() => this.props.loginWithGoogle()}>Log in with Google</button>
+    render() {
+        if (this.props.authenticated) {
+            const { from } = this.props.location.state || { from: { pathname: '/' } }
 
-        {this.props.error ? <p>{this.props.error}</p> : null}
+            return <Redirect to={from} />
+        }
 
-        <form onSubmit={this.handleSubmit.bind(this)}>
-          <div>
-            <label>E-mail</label><br />
-            <input type="text" name="email" ref={this.email} />
-          </div>
-          <div>
-            <label>E-mail</label><br />
-            <input type="password" name="password" ref={this.password} />
-          </div>
-          <div>
-            <button type="submit" disabled={this.props.authenticating}>Login</button>
-          </div>
-        </form>
+        return (
+            <div>
+                <button onClick={() => this.props.loginWithFacebook()}>Log in with Facebook</button>
+                <button onClick={() => this.props.loginWithGoogle()}>Log in with Google</button>
 
-        <Link to="/signup">Create user</Link>
-      </div>
-    )
-  }
+                {this.props.error ? <p>{this.props.error}</p> : null}
 
-  handleSubmit(event) {
-    event.preventDefault()
+                <form onSubmit={this.handleSubmit.bind(this)}>
+                    <div>
+                        <label>E-mail</label><br />
+                        <input type="text" name="email" ref={this.email} />
+                    </div>
+                    <div>
+                        <label>E-mail</label><br />
+                        <input type="password" name="password" ref={this.password} />
+                    </div>
+                    <div>
+                        <button type="submit" disabled={this.props.authenticating}>Login</button>
+                    </div>
+                </form>
 
-    const email = this.email.current.value
-    const password = this.password.current.value
+                <Link to="/signup">Create user</Link>
+            </div>
+        )
+    }
 
-    this.props.loginWithEmailAndPassword(email, password)
-  }
+    handleSubmit(event) {
+        event.preventDefault()
+
+        const email = this.email.current.value
+        const password = this.password.current.value
+
+        this.props.loginWithEmailAndPassword(email, password)
+    }
 }
 
 const mapStateToProps = state => {
-  return {
-    authenticated: state.auth.loggedIn,
-    authenticating: state.auth.authenticating,
-    error: state.auth.loginError,
-  }
+    return {
+        authenticated: state.auth.loggedIn,
+        authenticating: state.auth.authenticating,
+        error: state.auth.loginError,
+    }
 }
 
 export default connect(mapStateToProps, {
-  loginWithEmailAndPassword,
-  loginWithFacebook,
-  loginWithGoogle
+    loginWithEmailAndPassword,
+    loginWithFacebook,
+    loginWithGoogle
 })(Login)

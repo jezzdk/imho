@@ -1,41 +1,41 @@
 const auth = (state = {
-  fetching: false,
-  authenticating: false,
-  loggedIn: false,
-  user: null,
-  loginError: null
+    fetching: false,
+    authenticating: false,
+    loggedIn: false,
+    user: null,
+    loginError: null
 }, action) => {
-  switch (action.type) {
+    switch (action.type) {
     case 'USER_LOADING':
-      return {
-        ...state,
-        fetching: action.payload
-      }
+        return {
+            ...state,
+            fetching: action.payload
+        }
     case 'USER_LOGGED_IN':
-      return {
-        ...state,
-        loggedIn: true,
-        user: action.payload
-      }
+        return {
+            ...state,
+            loggedIn: true,
+            user: action.payload
+        }
     case 'USER_LOGGED_OUT':
-      return {
-        ...state,
-        loggedIn: false,
-        user: null
-      }
+        return {
+            ...state,
+            loggedIn: false,
+            user: null
+        }
     case 'LOGIN_ERROR':
-      return {
-        ...state,
-        loginError: action.payload
-      }
+        return {
+            ...state,
+            loginError: action.payload
+        }
     case 'AUTHENTICATING':
-      return {
-        ...state,
-        authenticating: action.payload
-      }
+        return {
+            ...state,
+            authenticating: action.payload
+        }
     default:
-      return state
-  }
+        return state
+    }
 }
 
 export default auth

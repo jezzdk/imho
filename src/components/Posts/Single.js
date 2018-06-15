@@ -1,16 +1,16 @@
-import React from 'react';
+import React from 'react'
 
 const Single = ({ post }) => {
-  if (post === undefined) {
-    return null;
-  }
+    if (post === undefined) {
+        return null
+    }
 
-  return (
-    <div>
-      <h2>{post.title}</h2>
-      <p>{post.text}</p>
-    </div>
-  );
+    return (
+        <div>
+            <h2>{post.title}</h2>
+            <p>{post.text}</p>
+        </div>
+    )
 }
 
-export default Single;
+export default Single

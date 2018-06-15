@@ -1,33 +1,33 @@
-import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
-import { firebaseApp } from '../../firebase';
+import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
+import { firebaseApp } from '../../firebase'
 
 class Logout extends Component {
     constructor(props) {
-      super(props);
+        super(props)
 
-      this.state = {
-        redirect: false
-      };
+        this.state = {
+            redirect: false
+        }
     }
 
-    componentWillMount() {
-      firebaseApp.auth().signOut().then(() => {
-        this.setState({
-          redirect: true
-        });
-      });
+    componentDidMount() {
+        firebaseApp.auth().signOut().then(() => {
+            this.setState({
+                redirect: true
+            })
+        })
     }
 
     render() {
-      if (this.state.redirect === true) {
-        return <Redirect to="/" />;
-      }
+        if (this.state.redirect === true) {
+            return <Redirect to="/" />
+        }
 
-      return (
-        <div>Logging out...</div>
-      );
+        return (
+            <div>Logging out...</div>
+        )
     }
 }
 
-export default Logout;
+export default Logout

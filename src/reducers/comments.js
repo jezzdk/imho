@@ -1,62 +1,63 @@
 const comments = (state = {
-  fetching: false,
-  items: [],
-  error: null
+    fetching: false,
+    items: [],
+    error: null
 }, action) => {
-  switch (action.type) {
+    switch (action.type) {
     case 'COMMENTS_LOADING':
-      return {
-        ...state,
-        fetching: true
-      }
+        return {
+            ...state,
+            fetching: true
+        }
 
     case 'RECEIVE_COMMENTS':
-      return {
-        ...state,
-        fetching: false,
-        items: action.comments
-      }
+        return {
+            ...state,
+            fetching: false,
+            items: action.comments
+        }
 
     case 'ADD_COMMENT':
-      return {
-        ...state,
-        items: [
-          ...state.items,
-          {
-            title: action.title,
-            text: action.text,
-          }
-        ]
-      }
+        return {
+            ...state,
+            items: [
+                ...state.items,
+                {
+                    title: action.title,
+                    text: action.text,
+                }
+            ]
+        }
 
     case 'COMMENT_ADDED':
-      return state
+        return state
 
-    case 'COMMENT_DELETED':
-      let comments = [...state.items]
-      let index = comments.findIndex((comment) => {
-        return comment.id === action.id
-      })
+    case 'COMMENT_DELETED': {
+        let comments = [...state.items]
+        let index = comments.findIndex((comment) => {
+            return comment.id === action.id
+        })
 
-      if (index !== -1) {
-        comments.splice(index, 1)
-      }
+        if (index !== -1) {
+            comments.splice(index, 1)
+        }
 
-      return {
-        ...state,
-        items: comments
-      }
+        return {
+            ...state,
+            items: comments
+        }
+    }
 
     case 'COMMENTS_FAILED':
-      return {
-        ...state,
-        fetching: false,
-        error: action.error
-      }
+        return {
+            ...state,
+            fetching: false,
+            error: action.error
+        }
 
     default:
-      return state
-  }
+        return state
+    }
 }
 
 export default comments

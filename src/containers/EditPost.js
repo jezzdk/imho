@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import Edit from '../components/Posts/Edit'
 
-import { fetchPost, updatePost } from '../actions/posts'
+import { fetchPost, updatePost, uploadImage } from '../actions/posts'
 
 class EditPost extends Component {
     componentDidMount() {
@@ -32,12 +32,24 @@ class EditPost extends Component {
         )
     }
 
-    updatePost(data) {
+    updatePost(data, file) {
         let postId = this.props.post.id
 
-        this.props.updatePost(postId, data)
-
-        this.props.history.push(`/posts/${postId}`)
+        if (file) {
+            this.props.uploadImage(file).then((fileData) => {
+                this.props.updatePost(postId, {
+                    ...data,
+                    image: fileData
+                }).then(() => {
+                    this.props.history.push(`/posts/${postId}`)
+                })
+            })
+        }
+        else {
+            this.props.updatePost(postId, data).then(() => {
+                this.props.history.push(`/posts/${postId}`)
+            })
+        }
     }
 }
 
@@ -48,4 +60,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { fetchPost, updatePost })(EditPost)
+export default connect(mapStateToProps, { fetchPost, updatePost, uploadImage })(EditPost)

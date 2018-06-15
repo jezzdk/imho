@@ -1,4 +1,4 @@
-import { firebase, database } from '../firebase'
+import { firebase, database, storage } from '../firebase'
 
 export const fetchPosts = () => {
     return function(dispatch) {
@@ -11,10 +11,6 @@ export const fetchPosts = () => {
                 posts.push({
                     id: doc.id,
                     ...doc.data()
-                })
-
-                database.collection('users').doc(doc.data().uid).get().then((userDoc) => {
-                    dispatch(attachAuthor(doc.id, userDoc.data()))
                 })
             })
 
@@ -55,22 +51,43 @@ export const fetchPost = (id) => {
 
 export const savePost = (post) => {
     return function(dispatch, getState) {
-        database.collection('posts').add({
+        let author = getState().auth.user
+
+        return database.collection('posts').add({
             ...post,
-            uid: getState().auth.user.uid,
+            uid: author.uid,
+            author: {
+                name: author.displayName,
+                avatar: author.photoURL,
+            },
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         }).then((doc) => {
             dispatch(postAdded(doc.id))
+            return doc
+        })
+    }
+}
+
+export const uploadImage = (file, process = undefined, error = undefined, success = undefined) => {
+    return function(dispatch, getState) {
+        let ref = storage.ref('image/' + Math.random().toString(36).substr(2, 9) + '_' + file.name).put(file)
+
+        ref.on('state_changed', process, error, success)
+
+        return ref.then(function(snapshot) {
+            return snapshot.ref.getDownloadURL()
         })
     }
 }
 
 export const updatePost = (id, post) => {
     return function(dispatch, getState) {
-        database.collection('posts').doc(id).set({
+        return database.collection('posts').doc(id).set({
             ...post,
-        }, { merge: true }).then(() => {
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true }).then((doc) => {
             dispatch(postUpdated(id))
+            return doc
         })
     }
 }

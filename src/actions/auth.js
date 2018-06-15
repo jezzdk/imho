@@ -8,7 +8,6 @@ export const fetchAuthInfo = () => {
             dispatch(userLoading(false))
 
             if (user) {
-                dispatch(updateUserData(user))
                 dispatch(userLoggedIn(user))
             }
             else {

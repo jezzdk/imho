@@ -12,6 +12,7 @@ class EditPost extends Component {
             title: '',
             text: '',
             image: null,
+            uploadProcess: 0,
             postLoaded: false
         }
 
@@ -91,7 +92,11 @@ class EditPost extends Component {
         let file = this.image.current.files.length > 0 ? this.image.current.files[0] : null
 
         if (file) {
-            this.props.uploadImage(file).then((fileData) => {
+            this.props.uploadImage(file, (snapshot) => {
+                this.setState({
+                    uploadProcess: Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+                })
+            }).then((fileData) => {
                 this.props.updatePost(postId, {
                     title: this.state.title,
                     text: this.state.text,
@@ -147,6 +152,7 @@ class EditPost extends Component {
                         <textarea name="text" value={this.state.text} onChange={this.handleChange.bind(this)}></textarea>
                     </div>
                     <button type="submit">Save</button>
+                    {this.state.uploadProcess ? <p>Uploading: {this.state.uploadProcess}%</p> : null}
                 </form>
                 <Link to={`/posts/${postId}`}>Go back</Link>
             </div>

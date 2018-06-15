@@ -43,9 +43,7 @@ export const loginWithEmailAndPassword = (email, password) => {
             }
             else {
                 // sign user in
-                firebaseApp.auth().signInWithEmailAndPassword(email, password).then((user) => {
-                    console.log('LOGIN', user)
-                })
+                firebaseApp.auth().signInWithEmailAndPassword(email, password)
             }
         }).catch((error) => {
             dispatch(authenticating(false))
@@ -58,8 +56,7 @@ export const loginWithFacebook = () => {
     return function(dispatch) {
         dispatch(authenticating(true))
 
-        firebaseApp.auth().signInWithPopup(facebookProvider).then((user) => {
-            console.log('FACEBOOK', user)
+        firebaseApp.auth().signInWithPopup(facebookProvider).then(() => {
             dispatch(authenticating(false))
         }).catch((error) => {
             dispatch(authenticating(false))
@@ -72,8 +69,7 @@ export const loginWithGoogle = () => {
     return function(dispatch) {
         dispatch(authenticating(true))
 
-        firebaseApp.auth().signInWithPopup(googleProvider).then((user) => {
-            console.log('GOOGLE', user)
+        firebaseApp.auth().signInWithPopup(googleProvider).then(() => {
             dispatch(authenticating(false))
         }).catch((error) => {
             dispatch(authenticating(false))
@@ -104,6 +100,7 @@ export const signupWithEmailAndPassword = (name, email, password) => {
 export const logout = () => {
     return function(dispatch) {
         firebaseApp.auth().signOut()
+        dispatch(userLoggedOut())
     }
 }
 
@@ -135,7 +132,7 @@ export const userLoggedIn = (user) => {
     }
 }
 
-export const userLoggedOut = (user) => {
+export const userLoggedOut = () => {
     return {
         type: 'USER_LOGGED_OUT'
     }

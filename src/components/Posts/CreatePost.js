@@ -52,7 +52,6 @@ class CreatePost extends Component {
                 this.setState({
                     image: e.target.result
                 })
-
             }
 
             reader.readAsDataURL(input.files[0])

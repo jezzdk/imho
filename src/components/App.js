@@ -8,9 +8,9 @@ import PageNotFound from '../components/PageNotFound'
 import Header from './Header'
 import Login from './Login'
 import Signup from './Signup'
-import SinglePost from './SinglePost'
-import CreatePost from './CreatePost'
-import EditPost from './EditPost'
+import SinglePost from './Posts/SinglePost'
+import CreatePost from './Posts/CreatePost'
+import EditPost from './Posts/EditPost'
 
 import { fetchAuthInfo } from '../actions/auth'
 

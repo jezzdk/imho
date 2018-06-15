@@ -6,7 +6,6 @@ export const fetchComments = (postId) => {
 
         database.collection('posts/' + postId + '/comments').orderBy('createdAt').get().then(function(querySnapshot) {
             let comments = []
-            console.log(querySnapshot)
 
             querySnapshot.forEach(function(doc) {
                 comments.push({
@@ -24,26 +23,34 @@ export const fetchComments = (postId) => {
 
 export const saveComment = (postId, comment) => {
     return function(dispatch, getState) {
-        database.collection('posts/' + postId + '/comments').add({
+        let author = getState().auth.user
+
+        return database.collection('posts/' + postId + '/comments').add({
             ...comment,
-            uid: getState().auth.user.uid,
+            uid: author.uid,
+            author: {
+                name: author.displayName,
+                avatar: author.photoURL,
+            },
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         }).then((doc) => {
             dispatch(commentAdded(doc.id))
             dispatch(fetchComments(postId))
+            return doc
         })
     }
 }
 
 export const deleteComment = (postId, commentId) => {
     return function(dispatch) {
-        database.collection('posts/' + postId + '/comments').doc(commentId).delete().then(() => {
+        return database.collection('posts/' + postId + '/comments').doc(commentId).delete().then(() => {
             dispatch(commentDeleted(commentId))
+            return commentId
         })
     }
 }
 
-export const commentsLoading = (posts) => {
+export const commentsLoading = () => {
     return {
         type: 'COMMENTS_LOADING',
     }

@@ -1,12 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import PostList from '../containers/PostList'
+import ListPosts from './Posts/ListPosts'
 
 const Home = () => (
     <div>
         <p className="App-intro">Welcome home. <Link to="/posts/create">Create a post</Link>.</p>
-        <PostList />
+        <ListPosts />
     </div>
 )
 

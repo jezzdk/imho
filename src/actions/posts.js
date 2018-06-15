@@ -21,19 +21,11 @@ export const fetchPosts = () => {
     }
 }
 
-export const attachAuthor = (postId, data) => {
-    return {
-        type: 'ATTACH_AUTHOR',
-        id: postId,
-        author: data
-    }
-}
-
 export const fetchPost = (id) => {
     return function(dispatch) {
         dispatch(postsLoading())
 
-        database.collection('posts').doc(id).get().then(function(doc) {
+        return database.collection('posts').doc(id).get().then(function(doc) {
             if (doc.exists) {
                 dispatch(receivePost({
                     id: doc.id,
@@ -43,6 +35,8 @@ export const fetchPost = (id) => {
                 // doc.data() will be undefined in this case
                 //console.log("No such document!")
             }
+
+            return doc
         }).catch((error) => {
             dispatch(postsFailed(error))
         })
@@ -94,8 +88,9 @@ export const updatePost = (id, post) => {
 
 export const deletePost = id => {
     return function(dispatch) {
-        database.collection('posts').doc(id).delete().then(() => {
+        return database.collection('posts').doc(id).delete().then(() => {
             dispatch(postDeleted(id))
+            return id
         })
     }
 }

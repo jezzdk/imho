@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import Single from '../components/Comments/Single'
-import CreateComment from '../components/Comments/Create'
+import SingleComment from '../Comments/SingleComment'
+import CreateComment from '../Comments/CreateComment'
 
-import { fetchComments, saveComment, deleteComment } from '../actions/comments'
+import { fetchComments, deleteComment } from '../../actions/comments'
 
 class Comments extends Component {
     componentDidMount() {
@@ -12,19 +12,19 @@ class Comments extends Component {
     }
 
     render() {
-        let { authenticated, user, isFetching, comments, post } = this.props
+        let { authenticated, user, isFetching, comments, post } = this.props
 
         return (
             <div>
                 <h3>Comments:</h3>
-                {authenticated ? <CreateComment post={post} save={this.props.saveComment} /> : null}
+                {authenticated ? <CreateComment post={post} /> : null}
                 {isFetching ? <p>Loading comments...</p> : null}
                 {!isFetching && comments.length > 0 ? (
                     <ul>
                         {comments.map((comment) => {
                             return (
                                 <li key={comment.id}>
-                                    <Single comment={comment} authenticated={authenticated} user={user} deleteComment={() => this.props.deleteComment(post.id, comment.id)}></Single>
+                                    <SingleComment comment={comment} authenticated={authenticated} user={user} deleteComment={() => this.props.deleteComment(post.id, comment.id)}></SingleComment>
                                 </li>
                             )
                         })}
@@ -35,7 +35,7 @@ class Comments extends Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
     return {
         authenticated: state.auth.loggedIn,
         user: state.auth.user,
@@ -44,4 +44,4 @@ const mapStateToProps = (state, ownProps) => {
     }
 }
 
-export default connect(mapStateToProps, { fetchComments, saveComment, deleteComment })(Comments)
+export default connect(mapStateToProps, { fetchComments, deleteComment })(Comments)

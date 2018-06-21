@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import { savePost, uploadImage } from '../../actions/posts'
+import { savePost } from '../../actions/posts'
+import { uploadImage } from '../../actions/files'
 
 class CreatePost extends Component {
     constructor(props) {

@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import { fetchPost, updatePost, uploadImage } from '../../actions/posts'
+import { fetchPost, updatePost } from '../../actions/posts'
+import { uploadImage } from '../../actions/files'
 
 class EditPost extends Component {
     constructor(props) {

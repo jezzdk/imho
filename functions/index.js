@@ -6,7 +6,7 @@ exports.createUserProfile = functions.auth.user().onCreate((user) => {
     return admin.firestore().collection('users').doc(user.uid).set({
         displayName: user.displayName,
         photoURL: user.photoURL,
-        gender: 'Male',
+        email: user.email,
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
     })
 })

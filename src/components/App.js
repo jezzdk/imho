@@ -7,9 +7,10 @@ import AuthenticatedRoute from './AuthenticatedRoute'
 import CreatePost from './Posts/CreatePost'
 import EditPost from './Posts/EditPost'
 import Header from './Header'
-import Home from '../components/Home'
+import Home from './Home'
 import Login from './Login'
-import PageNotFound from '../components/PageNotFound'
+import PageNotFound from './PageNotFound'
+import Profile from './Profile'
 import Signup from './Signup'
 import SinglePost from './Posts/SinglePost'
 
@@ -39,6 +40,7 @@ class App extends Component {
                         <AuthenticatedRoute path="/posts/create" component={CreatePost} authenticated={this.props.authenticated} />
                         <AuthenticatedRoute path="/posts/:id/edit" component={EditPost} authenticated={this.props.authenticated} />
                         <Route path="/posts/:id" component={SinglePost} />
+                        <AuthenticatedRoute path="/profile" component={Profile} authenticated={this.props.authenticated} />
                         <Redirect to="/404" />
                     </Switch>
                 </div>

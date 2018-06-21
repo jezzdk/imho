@@ -11,7 +11,7 @@ class Header extends Component {
             <header className="App-header">
                 <Link to="/"><h1 className="App-title">Welcome to React</h1></Link>
                 {this.props.authenticated ? (
-                    <span>Hello {this.props.user.displayName}! {this.props.user.photoURL ? <img src={this.props.user.photoURL} style={{borderRadius: '50%', maxWidth: '50px'}} alt={this.props.user.displayName} /> : null} <a href="#logout" onClick={(e) => this.logout(e)}>Logout</a></span>
+                    <span>Hello <Link to="/profile">{this.props.user.displayName}</Link>! {this.props.user.photoURL ? <img src={this.props.user.photoURL} style={{borderRadius: '50%', maxWidth: '50px'}} alt={this.props.user.displayName} /> : null} <a href="#logout" onClick={(e) => this.logout(e)}>Logout</a></span>
                 ) : (
                     <Link to="/login">Login</Link>
                 )}

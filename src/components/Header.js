@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import { logout } from '../actions/auth'
 
@@ -23,6 +24,12 @@ class Header extends Component {
 
         this.props.logout()
     }
+}
+
+Header.propTypes = {
+    authenticated: PropTypes.bool,
+    logout: PropTypes.func,
+    user: PropTypes.object
 }
 
 const mapStateToProps = state => {

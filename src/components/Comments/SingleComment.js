@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import PropTypes from 'prop-types'
 
 const Single = ({ comment, authenticated, user, deleteComment }) => (
     <div>
@@ -10,5 +11,12 @@ const Single = ({ comment, authenticated, user, deleteComment }) => (
         {authenticated && comment.uid === user.uid ? (<p><a href="#delete" onClick={deleteComment}>Delete</a></p>) : null}
     </div>
 )
+
+Single.propTypes = {
+    comment: PropTypes.object,
+    authenticated: PropTypes.bool,
+    user: PropTypes.object,
+    deleteComment: PropTypes.func
+}
 
 export default Single

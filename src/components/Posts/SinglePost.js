@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
+import PropTypes from 'prop-types'
 
 import Comments from './Comments'
 
@@ -57,6 +58,17 @@ class SinglePost extends Component {
             this.props.history.push('/')
         })
     }
+}
+
+SinglePost.propTypes = {
+    authenticated: PropTypes.bool,
+    user: PropTypes.object,
+    isFetching: PropTypes.bool,
+    post: PropTypes.object,
+    fetchPost: PropTypes.func,
+    deletePost: PropTypes.func,
+    history: PropTypes.object,
+    match: PropTypes.object
 }
 
 const mapStateToProps = (state, ownProps) => {

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+
 import { saveComment } from '../../actions/comments'
 
 class CreateComment extends Component {
@@ -54,6 +56,11 @@ class CreateComment extends Component {
             </form>
         )
     }
+}
+
+CreateComment.propTypes = {
+    post: PropTypes.object,
+    saveComment: PropTypes.func
 }
 
 export default connect(null, { saveComment })(CreateComment)

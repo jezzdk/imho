@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import SingleComment from '../Comments/SingleComment'
 import CreateComment from '../Comments/CreateComment'
@@ -33,6 +34,16 @@ class Comments extends Component {
             </div>
         )
     }
+}
+
+Comments.propTypes = {
+    post: PropTypes.object,
+    authenticated: PropTypes.bool,
+    user: PropTypes.object,
+    isFetching: PropTypes.bool,
+    comments: PropTypes.array,
+    fetchComments: PropTypes.func,
+    deleteComment: PropTypes.func
 }
 
 const mapStateToProps = (state) => {

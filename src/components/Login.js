@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Redirect, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import { loginWithEmailAndPassword, loginWithFacebook, loginWithGoogle } from '../actions/auth'
 
@@ -53,6 +54,16 @@ class Login extends Component {
 
         this.props.loginWithEmailAndPassword(email, password)
     }
+}
+
+Login.propTypes = {
+    authenticated: PropTypes.bool,
+    authenticating: PropTypes.bool,
+    error: PropTypes.string,
+    loginWithEmailAndPassword: PropTypes.func,
+    loginWithFacebook: PropTypes.func,
+    loginWithGoogle: PropTypes.func,
+    location: PropTypes.object
 }
 
 const mapStateToProps = state => {

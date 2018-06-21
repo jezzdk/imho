@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import moment from 'moment'
+import PropTypes from 'prop-types'
 
 import { fetchPosts, deletePost } from '../../actions/posts'
 
@@ -28,7 +29,6 @@ class PostList extends Component {
         return (
             <ul>
                 {posts.map((post) => {
-                    console.log(post)
                     return (
                         <li key={post.id}>
                             {post.createdAt ? moment.unix(post.createdAt.seconds).format('YYYY-MM-DD HH:mm') : null}
@@ -46,11 +46,22 @@ class PostList extends Component {
     }
 }
 
+PostList.propTypes = {
+    authenticated: PropTypes.bool,
+    user: PropTypes.object,
+    isFetching: PropTypes.bool,
+    posts: PropTypes.array,
+    error: PropTypes.string,
+    fetchPosts: PropTypes.func,
+    deletePost: PropTypes.func
+}
+
 const mapStateToProps = state => ({
     authenticated: state.auth.loggedIn,
     user: state.auth.user,
     isFetching: state.posts.fetching,
-    posts: state.posts.items
+    posts: state.posts.items,
+    error: state.posts.error
 })
 
 export default connect(mapStateToProps, { fetchPosts, deletePost })(PostList)

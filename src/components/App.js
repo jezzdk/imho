@@ -1,26 +1,19 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
-import Home from '../components/Home'
-import PageNotFound from '../components/PageNotFound'
-
-import Header from './Header'
-import Login from './Login'
-import Signup from './Signup'
-import SinglePost from './Posts/SinglePost'
+import AuthenticatedRoute from './AuthenticatedRoute'
 import CreatePost from './Posts/CreatePost'
 import EditPost from './Posts/EditPost'
+import Header from './Header'
+import Home from '../components/Home'
+import Login from './Login'
+import PageNotFound from '../components/PageNotFound'
+import Signup from './Signup'
+import SinglePost from './Posts/SinglePost'
 
 import { fetchAuthInfo } from '../actions/auth'
-
-function AuthenticatedRoute({ component: Component, authenticated, ...rest}) {
-    return (
-        <Route {...rest} render={(props) => {
-            return authenticated === true ? <Component {...props} {...rest} /> : <Redirect to={ { pathname: '/login', state: { from: props.location } } } />
-        }} />
-    )
-}
 
 class App extends Component {
     componentDidMount() {
@@ -52,6 +45,12 @@ class App extends Component {
             </BrowserRouter>
         )
     }
+}
+
+App.propTypes = {
+    fetchAuthInfo: PropTypes.func,
+    loading: PropTypes.bool,
+    authenticated: PropTypes.bool
 }
 
 const mapStateToProps = state => ({

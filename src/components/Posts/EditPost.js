@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import { fetchPost, updatePost, uploadImage } from '../../actions/posts'
 
@@ -158,6 +159,16 @@ class EditPost extends Component {
             </div>
         )
     }
+}
+
+EditPost.propTypes = {
+    isFetching: PropTypes.bool,
+    post: PropTypes.object,
+    fetchPost: PropTypes.func,
+    updatePost: PropTypes.func,
+    uploadImage: PropTypes.func,
+    history: PropTypes.object,
+    match: PropTypes.object
 }
 
 const mapStateToProps = state => {

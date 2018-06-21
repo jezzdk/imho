@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import { savePost, uploadImage } from '../../actions/posts'
 
@@ -130,6 +131,13 @@ class CreatePost extends Component {
             </div>
         )
     }
+}
+
+CreatePost.propTypes = {
+    user: PropTypes.object,
+    savePost: PropTypes.func,
+    uploadImage: PropTypes.func,
+    history: PropTypes.object
 }
 
 const mapStateToProps = state => {

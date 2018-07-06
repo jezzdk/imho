@@ -5,16 +5,38 @@ export const fetchPosts = () => {
         dispatch(postsLoading())
 
         database.collection('posts').orderBy('createdAt', 'desc').get().then(function(querySnapshot) {
-            let posts = []
+            let posts = {}
+            let handles = []
 
             querySnapshot.forEach(function(doc) {
-                posts.push({
+                if (!doc.exists) {
+                    return
+                }
+
+                posts[doc.id] = {
                     id: doc.id,
-                    ...doc.data()
+                    ...doc.data(),
+                }
+
+                let handle = database.collection('users').doc(doc.data().uid).get().then(function(userDoc) {
+                    if (!userDoc.exists) {
+                        return
+                    }
+
+                    posts[doc.id].author = {
+                        ...userDoc.data()
+                    }
+                }).catch((error) => {
+                    // catch any errors
                 })
+
+                handles.push(handle)
             })
 
-            dispatch(receivePosts(posts))
+            // WHen all users are finished loading, dispatch the next action
+            Promise.all(handles).then(function() {
+                dispatch(receivePosts(Object.values(posts)))
+            })
         }).catch((error) => {
             dispatch(postsFailed(error))
         })
@@ -26,17 +48,25 @@ export const fetchPost = (id) => {
         dispatch(postsLoading())
 
         return database.collection('posts').doc(id).get().then(function(doc) {
-            if (doc.exists) {
-                dispatch(receivePost({
-                    id: doc.id,
-                    ...doc.data()
-                }))
-            } else {
-                // doc.data() will be undefined in this case
-                //console.log("No such document!")
+            if (!doc.exists) {
+                return
             }
 
-            return doc
+            database.collection('users').doc(doc.data().uid).get().then(function(userDoc) {
+                if (!userDoc.exists) {
+                    return
+                }
+
+                dispatch(receivePost({
+                    id: doc.id,
+                    ...doc.data(),
+                    author: {
+                        ...userDoc.data()
+                    }
+                }))
+            }).catch((error) => {
+                // catch any errors
+            })
         }).catch((error) => {
             dispatch(postsFailed(error))
         })
@@ -50,10 +80,6 @@ export const savePost = (post) => {
         return database.collection('posts').add({
             ...post,
             uid: author.uid,
-            author: {
-                name: author.displayName,
-                avatar: author.photoURL,
-            },
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         }).then((doc) => {
             dispatch(postAdded(doc.id))

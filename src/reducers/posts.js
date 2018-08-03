@@ -8,20 +8,18 @@ const posts = (state = {
     case 'POSTS_LOADING':
         return {
             ...state,
-            fetching: true
+            fetching: action.status
         }
 
     case 'RECEIVE_POSTS':
         return {
             ...state,
-            fetching: false,
             items: action.posts
         }
 
     case 'RECEIVE_POST':
         return {
             ...state,
-            fetching: false,
             currentPost: action.post
         }
 
@@ -62,7 +60,6 @@ const posts = (state = {
     case 'POSTS_FAILED':
         return {
             ...state,
-            fetching: false,
             error: action.error
         }
 

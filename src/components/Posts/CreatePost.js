@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
+import ImageUpload from '../ImageUpload'
 import { savePost } from '../../actions/posts'
 import { uploadImage } from '../../actions/files'
 
@@ -20,59 +21,23 @@ class CreatePost extends Component {
         this.image = React.createRef()
     }
 
-    openFileDialog(event) {
-        event.preventDefault()
-        this.image.current.click()
-    }
-
-    removeImage(event) {
-        event.preventDefault()
-
-        this.image.current.value = ''
-        this.setState({
-            image: null
-        })
-    }
-
-    handleFileUpload(event) {
-        let input = event.target
-
-        if (input.files.length > 0) {
-            if (input.files[0].size > 1000000) {
-                alert('Image size too large. Maximum 1MB!')
-                return
-            }
-
-            if (!['image/jpeg', 'image/gif', 'image/png'].includes(input.files[0].type)) {
-                alert('Only jpg, png and gif images are accepted!')
-                return
-            }
-
-            var reader = new FileReader()
-
-            reader.onload = (e) => {
-                this.setState({
-                    image: e.target.result
-                })
-            }
-
-            reader.readAsDataURL(input.files[0])
-        }
-    }
-
     handleChange(event) {
         this.setState({
             [event.target.name]: event.target.value
         })
     }
 
+    handleImageUpload(file) {
+        this.setState({
+            image: file
+        })
+    }
+
     handleSubmit(event) {
         event.preventDefault()
 
-        let file = this.image.current.files.length > 0 ? this.image.current.files[0] : null
-
-        if (file) {
-            this.props.uploadImage(file, (snapshot) => {
+        if (this.state.image) {
+            this.props.uploadImage(this.state.image, (snapshot) => {
                 this.setState({
                     uploadProcess: Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
                 })
@@ -107,14 +72,7 @@ class CreatePost extends Component {
                     <h1>Create</h1>
                     <form onSubmit={this.handleSubmit.bind(this)}>
                         <div>
-                            <input type="file" onChange={this.handleFileUpload.bind(this)} ref={this.image} style={{display: 'none'}} />
-
-                            {this.state.image ? (
-                                <div>
-                                    <img alt="" src={this.state.image} style={{maxWidth: '100px'}} />
-                                    <div><a href="#remove" onClick={this.removeImage.bind(this)}>Remove image</a></div>
-                                </div>
-                            ) : <a href="#upload" onClick={this.openFileDialog.bind(this)}>upload image</a>}
+                            <ImageUpload input={this.handleImageUpload.bind(this)}></ImageUpload>
                         </div>
                         <div>
                             <label>Title</label><br />

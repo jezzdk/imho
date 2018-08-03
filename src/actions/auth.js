@@ -1,4 +1,6 @@
-import { firebaseApp, database, facebookProvider, googleProvider } from '../firebase'
+import { firebaseApp, facebookProvider, googleProvider } from '../firebase'
+
+import { fetchProfile } from './profile'
 
 export const fetchAuthInfo = () => {
     return function(dispatch) {
@@ -9,6 +11,7 @@ export const fetchAuthInfo = () => {
 
             if (user) {
                 dispatch(userLoggedIn(user))
+                dispatch(fetchProfile(user.uid))
             }
             else {
                 dispatch(userLoggedOut())
@@ -17,12 +20,19 @@ export const fetchAuthInfo = () => {
     }
 }
 
-export const updateUserData = user => {
+export const fetchUser = () => {
+    return firebaseApp.auth().currentUser
+}
+
+export const updateUser = (data) => {
     return function(dispatch) {
-        database.collection('users').doc(user.uid).set({
-            displayName: user.displayName,
-            photoURL: user.photoURL
-        }, { merge: true })
+        let user = fetchUser()
+
+        user.updateProfile({
+            ...data
+        })
+
+        return firebaseApp.auth().updateCurrentUser(user)
     }
 }
 

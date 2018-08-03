@@ -2,7 +2,7 @@ import { firebase, database } from '../firebase'
 
 export const fetchPosts = () => {
     return function(dispatch) {
-        dispatch(postsLoading())
+        dispatch(postsLoading(true))
 
         database.collection('posts').orderBy('createdAt', 'desc').get().then(function(querySnapshot) {
             let posts = {}
@@ -18,7 +18,7 @@ export const fetchPosts = () => {
                     ...doc.data(),
                 }
 
-                let handle = database.collection('users').doc(doc.data().uid).get().then(function(userDoc) {
+                let handle = database.collection('profiles').doc(doc.data().uid).get().then(function(userDoc) {
                     if (!userDoc.exists) {
                         return
                     }
@@ -35,9 +35,11 @@ export const fetchPosts = () => {
 
             // WHen all users are finished loading, dispatch the next action
             Promise.all(handles).then(function() {
+                dispatch(postsLoading(false))
                 dispatch(receivePosts(Object.values(posts)))
             })
         }).catch((error) => {
+            dispatch(postsLoading(false))
             dispatch(postsFailed(error))
         })
     }
@@ -45,18 +47,20 @@ export const fetchPosts = () => {
 
 export const fetchPost = (id) => {
     return function(dispatch) {
-        dispatch(postsLoading())
+        dispatch(postsLoading(true))
 
         return database.collection('posts').doc(id).get().then(function(doc) {
             if (!doc.exists) {
+                dispatch(postsLoading(false))
                 return
             }
 
-            database.collection('users').doc(doc.data().uid).get().then(function(userDoc) {
+            database.collection('profiles').doc(doc.data().uid).get().then(function(userDoc) {
                 if (!userDoc.exists) {
                     return
                 }
 
+                dispatch(postsLoading(false))
                 dispatch(receivePost({
                     id: doc.id,
                     ...doc.data(),
@@ -68,6 +72,7 @@ export const fetchPost = (id) => {
                 // catch any errors
             })
         }).catch((error) => {
+            dispatch(postsLoading(false))
             dispatch(postsFailed(error))
         })
     }
@@ -89,7 +94,7 @@ export const savePost = (post) => {
 }
 
 export const updatePost = (id, post) => {
-    return function(dispatch, getState) {
+    return function(dispatch) {
         return database.collection('posts').doc(id).set({
             ...post,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -109,9 +114,10 @@ export const deletePost = id => {
     }
 }
 
-export const postsLoading = (posts) => {
+export const postsLoading = (status) => {
     return {
         type: 'POSTS_LOADING',
+        status
     }
 }
 

@@ -56,7 +56,7 @@ App.propTypes = {
 }
 
 const mapStateToProps = state => ({
-    loading: state.auth.fetching,
+    loading: state.auth.authenticating,
     user: state.auth.user,
     authenticated: state.auth.loggedIn
 })

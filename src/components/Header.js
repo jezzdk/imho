@@ -11,7 +11,11 @@ class Header extends Component {
             <header className="App-header">
                 <Link to="/"><h1 className="App-title">Welcome to React</h1></Link>
                 {this.props.authenticated ? (
-                    <span>Hello <Link to="/profile">{this.props.user.displayName}</Link>! {this.props.user.photoURL ? <img src={this.props.user.photoURL} style={{borderRadius: '50%', maxWidth: '50px'}} alt={this.props.user.displayName} /> : null} <a href="#logout" onClick={(e) => this.logout(e)}>Logout</a></span>
+                    this.props.loading || !this.props.user ? (
+                        <span>Loading...</span>
+                    ) : (
+                        <span>Hello <Link to="/profile">{this.props.user.displayName}</Link>! {this.props.user.photoURL ? <img src={this.props.user.photoURL} style={{borderRadius: '50%', maxWidth: '50px'}} alt={this.props.user.displayName} /> : null} <a href="#logout" onClick={(e) => this.logout(e)}>Logout</a></span>
+                    )
                 ) : (
                     <Link to="/login">Login</Link>
                 )}
@@ -28,14 +32,16 @@ class Header extends Component {
 
 Header.propTypes = {
     authenticated: PropTypes.bool,
+    user: PropTypes.object,
+    loading: PropTypes.bool,
     logout: PropTypes.func,
-    user: PropTypes.object
 }
 
 const mapStateToProps = state => {
     return {
         authenticated: state.auth.loggedIn,
-        user: state.auth.user
+        user: state.profile.data,
+        loading: state.profile.fetching
     }
 }
 

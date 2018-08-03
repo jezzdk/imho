@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
+import ImageUpload from '../ImageUpload'
 import { fetchPost, updatePost } from '../../actions/posts'
 import { uploadImage } from '../../actions/files'
 
@@ -11,74 +12,18 @@ class EditPost extends Component {
         super(props)
 
         this.state = {
-            title: '',
-            text: '',
             image: null,
             uploadProcess: 0,
             postLoaded: false
         }
 
+        this.title = React.createRef()
+        this.text = React.createRef()
         this.image = React.createRef()
     }
 
     componentDidMount() {
         this.props.fetchPost(this.props.match.params.id)
-    }
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.post && !prevState.postLoaded) {
-            let { title, text, image } = nextProps.post
-
-            return {
-                title,
-                text,
-                image,
-                postLoaded: true
-            }
-        }
-
-        return prevState
-    }
-
-    openFileDialog(event) {
-        event.preventDefault()
-        this.image.current.click()
-    }
-
-    removeImage(event) {
-        event.preventDefault()
-
-        this.image.current.value = ''
-
-        this.setState({
-            image: null
-        })
-    }
-
-    handleFileUpload(event) {
-        let input = event.target
-
-        if (input.files.length > 0) {
-            if (input.files[0].size > 1000000) {
-                alert('Image size too large. Maximum 1MB!')
-                return
-            }
-
-            if (!['image/jpeg', 'image/gif', 'image/png'].includes(input.files[0].type)) {
-                alert('Only jpg, png and gif images are accepted!')
-                return
-            }
-
-            var reader = new FileReader()
-
-            reader.onload = (e) => {
-                this.setState({
-                    image: e.target.result
-                })
-            }
-
-            reader.readAsDataURL(input.files[0])
-        }
     }
 
     handleChange(event) {
@@ -87,21 +32,38 @@ class EditPost extends Component {
         })
     }
 
+    handleImageUpload(file) {
+        this.setState({
+            image: file
+        })
+    }
+
+    removeImage() {
+        if (window.confirm('Are you sure? Your changes will be lost!')) {
+            let postId = this.props.match.params.id
+
+            this.props.updatePost(postId, {
+                image: null
+            }).then(() => {
+                this.props.fetchPost(postId)
+            })
+        }
+    }
+
     handleSubmit(event) {
         event.preventDefault()
 
         let postId = this.props.match.params.id
-        let file = this.image.current.files.length > 0 ? this.image.current.files[0] : null
 
-        if (file) {
-            this.props.uploadImage(file, (snapshot) => {
+        if (this.state.image) {
+            this.props.uploadImage(this.state.image, (snapshot) => {
                 this.setState({
                     uploadProcess: Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
                 })
             }).then((fileData) => {
                 this.props.updatePost(postId, {
-                    title: this.state.title,
-                    text: this.state.text,
+                    title: this.title.current.value,
+                    text: this.text.current.value,
                     image: fileData
                 }).then(() => {
                     this.props.history.push(`/posts/${postId}`)
@@ -110,8 +72,8 @@ class EditPost extends Component {
         }
         else {
             this.props.updatePost(postId, {
-                title: this.state.title,
-                text: this.state.text,
+                title: this.title.current.value,
+                text: this.text.current.value,
                 image: this.state.image,
             }).then(() => {
                 this.props.history.push(`/posts/${postId}`)
@@ -126,7 +88,7 @@ class EditPost extends Component {
             return <p>Loading...</p>
         }
 
-        if (!isFetching && post === null) {
+        if (!post) {
             return null
         }
 
@@ -136,22 +98,15 @@ class EditPost extends Component {
             <div>
                 <form onSubmit={this.handleSubmit.bind(this)}>
                     <div>
-                        <input type="file" onChange={this.handleFileUpload.bind(this)} ref={this.image} style={{display: 'none'}} />
-
-                        {this.state.image ? (
-                            <div>
-                                <img alt="" src={this.state.image} style={{maxWidth: '100px'}} />
-                                <div><a href="#remove" onClick={this.removeImage.bind(this)}>Remove image</a></div>
-                            </div>
-                        ) : <a href="#upload" onClick={this.openFileDialog.bind(this)}>upload image</a>}
+                        <ImageUpload input={this.handleImageUpload.bind(this)} image={post.image} remove={this.removeImage.bind(this)}></ImageUpload>
                     </div>
                     <div>
                         <label>Title</label><br />
-                        <input type="text" name="title" value={this.state.title} onChange={this.handleChange.bind(this)} />
+                        <input type="text" name="title" defaultValue={post.title} ref={this.title} />
                     </div>
                     <div>
                         <label>Text</label><br />
-                        <textarea name="text" value={this.state.text} onChange={this.handleChange.bind(this)}></textarea>
+                        <textarea name="text" defaultValue={post.text} ref={this.text}></textarea>
                     </div>
                     <button type="submit">Save</button>
                     {this.state.uploadProcess ? <p>Uploading: {this.state.uploadProcess}%</p> : null}

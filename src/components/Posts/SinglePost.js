@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import moment from 'moment'
 import PropTypes from 'prop-types'
 
@@ -20,8 +20,8 @@ class SinglePost extends Component {
             return <p>Loading...</p>
         }
 
-        if (!isFetching && post === null) {
-            return null
+        if (post === null) {
+            return <p>Post not found</p>
         }
 
         return (
@@ -32,8 +32,8 @@ class SinglePost extends Component {
                     {post.updatedAt ? <p>Edited: {moment.unix(post.updatedAt.seconds).format('YYYY-MM-DD HH:mm')}</p> : null}
                     {post.author ? (
                         <div>
-                            <img alt="" src={post.author.avatar || '/images/avatar.png'} style={{maxWidth: '50px'}} />
-                            {post.author.name}
+                            <img alt="" src={post.author.photoURL || '/images/avatar.png'} style={{maxWidth: '50px'}} />
+                            {post.author.displayName}
                         </div>
                     ) : null}
                     {post.image ? (

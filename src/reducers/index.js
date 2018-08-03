@@ -2,11 +2,11 @@ import { combineReducers } from 'redux'
 import auth from './auth'
 import comments from './comments'
 import posts from './posts'
-import users from './users'
+import profile from './profile'
 
 export default combineReducers({
     auth,
     comments,
     posts,
-    users
+    profile
 })

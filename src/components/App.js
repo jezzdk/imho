@@ -24,13 +24,17 @@ class App extends Component {
     render() {
         if (this.props.loading) {
             return (
-                <div>Loading...</div>
+                <div className="h-full w-full flex items-center justify-center bg-blue-light text-white">
+                    <div className="w-64 h-64 flex items-center justify-center border border-dashed border-white rounded-full">
+                        Logging in...
+                    </div>
+                </div>
             )
         }
 
         return (
             <BrowserRouter>
-                <div className="App">
+                <div className="app">
                     <Header />
                     <Switch>
                         <Route path="/" exact component={Home} />

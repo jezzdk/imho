@@ -9,6 +9,7 @@ import rootReducer from './reducers'
 import App from './components/App'
 import registerServiceWorker from './registerServiceWorker'
 
+import './tailwind.css'
 import './index.css'
 
 const loggerMiddleware = createLogger()

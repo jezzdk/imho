@@ -15,11 +15,11 @@ class PostList extends Component {
         let { isFetching, posts, deletePost, authenticated, user, error } = this.props
 
         if (isFetching) {
-            return <p>Fetching...</p>
+            return <div className="text-center">Loading posts...</div>
         }
 
         if (!isFetching && posts.length === 0) {
-            return <p>No posts yet :)</p>
+            return (<div className="text-center">No posts yet :)</div>)
         }
 
         if (!isFetching && error) {
@@ -27,21 +27,30 @@ class PostList extends Component {
         }
 
         return (
-            <ul>
+            <div className="flex">
                 {posts.map((post) => {
                     return (
-                        <li key={post.id}>
-                            {post.createdAt ? moment.unix(post.createdAt.seconds).format('YYYY-MM-DD HH:mm') : null}
-                            -
-                            {post.author && post.author.name ? <span>Skrevet af: {post.author.name}</span> : null}
-                            -
-                            {post.author && post.author.photoURL ? <img alt="avatar" src={post.author.photoURL} style={{maxWidth: '50px'}} /> : null}
-                            -
-                            <Link to={`/posts/${post.id}`}>{post.title}</Link> {authenticated && post.uid === user.uid ? (<a href="#delete" onClick={(e) => deletePost(post.id)}>Delete</a>) : null}
-                        </li>
+                        <div key={post.id} className="w-1/2">
+                            <Link to={`/posts/${post.id}`} className="block m-4 bg-white shadow rounded-lg">
+                                <div className="h-64 bg-cover bg-center rounded-t-lg relative" style={{backgroundImage: 'url('+(post.image || '/images/placeholder.jpg')+')'}}>
+                                    <div className="bg-black p-2 absolute pin-b pin-l text-white font-semibold">{post.title}</div>
+                                </div>
+                                <div className="p-4">
+                                    <div className="flex items-center">
+                                        {post.author && post.author.photoURL ? <img alt="avatar" src={post.author.photoURL} className="w-8 h-8 mr-2 rounded-full" /> : null}
+                                        <div className="">
+                                            <div className="text-sm">{post.author.displayName}</div>
+                                            <div className="text-sm text-grey">{post.createdAt ? moment.unix(post.createdAt.seconds).format('j F Y HH:mm') : null}</div>
+                                        </div>
+                                    </div>
+
+                                    {authenticated && post.uid === user.uid ? (<a href="#delete" onClick={(e) => deletePost(post.id)}>Delete</a>) : null}
+                                </div>
+                            </Link>
+                        </div>
                     )
                 })}
-            </ul>
+            </div>
         )
     }
 }

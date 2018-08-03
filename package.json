@@ -25,16 +25,18 @@
   "scripts": {
     "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
-    "start-js": "react-scripts start",
+    "start-js": "npm run tailwind:css && react-scripts start",
     "start": "npm-run-all -p watch-css start-js",
-    "build-js": "react-scripts build",
+    "build-js": "npm run tailwind:css && react-scripts build",
     "build": "npm-run-all build-css build-js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "firebase-functions": "firebase deploy --only functions"
+    "firebase-functions": "firebase deploy --only functions",
+    "tailwind:css":"tailwind build src/tailwind.src.css -c tailwind.js -o src/tailwind.css"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
-    "eslint-plugin-react": "^7.9.1"
+    "eslint-plugin-react": "^7.9.1",
+    "tailwindcss": "^0.6.4"
   }
 }

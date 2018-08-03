@@ -4,8 +4,7 @@ import { Link } from 'react-router-dom'
 import ListPosts from './Posts/ListPosts'
 
 const Home = () => (
-    <div>
-        <p className="App-intro">Welcome home. <Link to="/posts/create">Create a post</Link>.</p>
+    <div className="container mx-auto my-4">
         <ListPosts />
     </div>
 )

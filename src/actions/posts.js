@@ -26,8 +26,6 @@ export const fetchPosts = () => {
                     posts[doc.id].author = {
                         ...userDoc.data()
                     }
-                }).catch((error) => {
-                    // catch any errors
                 })
 
                 handles.push(handle)
@@ -68,8 +66,6 @@ export const fetchPost = (id) => {
                         ...userDoc.data()
                     }
                 }))
-            }).catch((error) => {
-                // catch any errors
             })
         }).catch((error) => {
             dispatch(postsLoading(false))

@@ -21,27 +21,41 @@ class Login extends Component {
         }
 
         return (
-            <div>
-                <button onClick={() => this.props.loginWithFacebook()}>Log in with Facebook</button>
-                <button onClick={() => this.props.loginWithGoogle()}>Log in with Google</button>
+            <div className="container mx-auto my-4">
+                <div className="w-1/2 mx-auto">
 
-                {this.props.error ? <p>{this.props.error}</p> : null}
+                    {this.props.error ? (
+                        <div class="bg-red-lightest border border-red-light text-red-dark mt-8 px-4 py-3 rounded relative" role="alert">
+                            <div><strong class="font-bold">An error occurred</strong></div>
+                            <div><span>{this.props.error}</span></div>
+                        </div>
+                    ) : null}
 
-                <form onSubmit={this.handleSubmit.bind(this)}>
-                    <div>
-                        <label>E-mail</label><br />
-                        <input type="text" name="email" ref={this.email} />
+                    <div className="mt-8 p-8 bg-white shadow-md rounded">
+                        <div className="mb-4">
+                            <button onClick={() => this.props.loginWithFacebook()} className="w-full rounded p-2 bg-blue text-white">Log in with Facebook</button>
+                        </div>
+                        <div className="mb-8">
+                            <button onClick={() => this.props.loginWithGoogle()} className="w-full rounded p-2 bg-white text-red border border-red">Log in with Google</button>
+                        </div>
+                        <form onSubmit={this.handleSubmit.bind(this)}>
+                            <div className="mb-4">
+                                <label className="block text-grey-darker text-sm font-semibold mb-2" htmlFor="username">E-mail</label>
+                                <input type="text" name="email" ref={this.email} className="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-grey-darker text-sm font-semibold mb-2" htmlFor="username">E-mail</label>
+                                <input type="password" name="password" ref={this.password} className="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight focus:outline-none focus:shadow-outline" />
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <button className="bg-blue hover:bg-blue-dark text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" disabled={this.props.authenticating}>
+                                    Sign In
+                                </button>
+                                <Link to="/signup" class="inline-block align-baseline font-semibold text-sm text-blue hover:text-blue-darker">Create user</Link>
+                            </div>
+                        </form>
                     </div>
-                    <div>
-                        <label>E-mail</label><br />
-                        <input type="password" name="password" ref={this.password} />
-                    </div>
-                    <div>
-                        <button type="submit" disabled={this.props.authenticating}>Login</button>
-                    </div>
-                </form>
-
-                <Link to="/signup">Create user</Link>
+                </div>
             </div>
         )
     }
